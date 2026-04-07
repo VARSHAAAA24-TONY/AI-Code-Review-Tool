@@ -24,13 +24,12 @@ const Auth = () => {
     setIsAuthorizing(true);
     setAuthStep(1);
     
-    // Phase 1: Contacting Provider
+    // Forensic Simulator: Mocking the Google Handshake delay
     setTimeout(() => setAuthStep(2), 1000);
-    // Phase 2: Secure Handshake
     setTimeout(() => setAuthStep(3), 2000);
-    // Phase 3: Finalizing Session
     setTimeout(() => {
       localStorage.setItem('sb-guest-session', 'true');
+      localStorage.setItem('sb-mock-email', 'authorized.user@google.com');
       window.location.reload();
     }, 3500);
   };
@@ -39,6 +38,7 @@ const Auth = () => {
     e.preventDefault();
     try {
       localStorage.setItem('sb-guest-session', 'true');
+      localStorage.setItem('sb-mock-email', email);
       window.location.reload();
     } catch (error) {
       console.error('Email handshake failure:', error.message);

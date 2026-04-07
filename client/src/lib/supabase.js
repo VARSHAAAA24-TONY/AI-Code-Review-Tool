@@ -10,15 +10,17 @@ export const supabase = isMockMode ? {
   auth: {
     getSession: async () => {
       const isGuest = localStorage.getItem('sb-guest-session');
+      const mockEmail = localStorage.getItem('sb-mock-email') || 'guest@forensic.core';
       return { 
-        data: { session: isGuest ? { user: { id: 'rakesh-n-01', email: 'rakesh.n@forensic.core' } } : null }, 
+        data: { session: isGuest ? { user: { id: 'mock-node-id', email: mockEmail } } : null }, 
         error: null 
       };
     },
     getUser: async () => {
       const isGuest = localStorage.getItem('sb-guest-session');
+      const mockEmail = localStorage.getItem('sb-mock-email') || 'guest@forensic.core';
       return { 
-        data: { user: isGuest ? { id: 'rakesh-n-01', email: 'rakesh.n@forensic.core' } : null }, 
+        data: { user: isGuest ? { id: 'mock-node-id', email: mockEmail } : null }, 
         error: null 
       };
     },

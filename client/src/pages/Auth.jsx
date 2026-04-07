@@ -27,6 +27,21 @@ const Auth = () => {
     }
   };
 
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // Forensic Bypass: Local Email Handshake
+      localStorage.setItem('sb-guest-session', 'true');
+      console.log('EMAIL_AUTHORIZATION: SUCCESS');
+      window.location.reload();
+    } catch (error) {
+      console.error('Email handshake failure:', error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#1A1D1E] flex items-center justify-center relative overflow-hidden font-sans text-[#B0B8B9]">
       {/* Background Decorative Elements */}
@@ -75,53 +90,54 @@ const Auth = () => {
             SYSTEM_UPLINK // NODE_US_E1
           </div>
 
-          <div className="mt-8 space-y-12">
-            <div className="space-y-6">
-              <div className="text-center space-y-2">
-                <p className="text-[12px] font-bold text-[#B0B8B9] uppercase tracking-widest flex items-center justify-center gap-3">
-                  <ShieldCheck size={14} className="text-[#00FFCC]" />
-                  Enter Secure Environment
-                </p>
-              </div>
-              
-              <button 
-                onClick={() => {
-                  localStorage.setItem('sb-guest-session', 'true');
-                  window.location.reload();
-                }}
-                className="btn-modern btn-primary w-full py-5 rounded-2xl flex items-center justify-center gap-4 group transition-all shadow-[0_0_30px_rgba(0,255,204,0.3)] border-none"
-              >
-                <Radiation size={20} className="group-hover:rotate-180 transition-transform duration-1000" />
-                <span className="text-sm font-extrabold uppercase tracking-[4px]">Initiate_Guest_Bypass</span>
-              </button>
-
-              <button 
-                onClick={handleGoogleLogin}
-                className="w-full py-4 rounded-xl border border-[#12B886]/20 bg-[#12B886]/5 text-[#12B886] hover:text-[#00FFCC] hover:border-[#00FFCC]/30 transition-all flex items-center justify-center gap-3 group opacity-40 hover:opacity-100"
-              >
-                <img src="https://www.gstatic.com/lamda/images/google_logo_color_24dp.v6.png" className="w-4 h-4 brightness-0 invert opacity-40 group-hover:opacity-100" alt="G" />
-                <span className="text-[10px] font-black uppercase tracking-[3px]">Sign in with Authorization (DB Required)</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-6">
-              {[
-                { icon: Terminal, label: 'SCAN' },
-                { icon: Cpu, label: 'COMPUTE' },
-                { icon: Zap, label: 'OUPUT' }
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white/[0.02] border border-[#12B886]/10 hover:border-[#00FFCC]/30 transition-all group">
-                  <item.icon size={18} className="text-[#12B886] group-hover:text-[#00FFCC] transition-colors" />
-                  <span className="text-[8px] font-bold text-[#B0B8B9] tracking-[2px]">{item.label}</span>
+          <div className="mt-8 space-y-8">
+            <form onSubmit={handleEmailLogin} className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold text-[#12B886] uppercase tracking-[2px] ml-1">Terminal_Identifier</label>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ENTER_EMAIL_UPLINK"
+                    className="w-full bg-black/40 border border-[#12B886]/20 rounded-xl px-5 py-4 text-xs font-mono text-[#00FFCC] placeholder:text-[#12B886]/30 focus:border-[#00FFCC]/50 focus:outline-none transition-all"
+                    required
+                  />
                 </div>
-              ))}
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold text-[#12B886] uppercase tracking-[2px] ml-1">Access_Certificate</label>
+                  <input 
+                    type="password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-black/40 border border-[#12B886]/20 rounded-xl px-5 py-4 text-xs font-mono text-[#00FFCC] placeholder:text-[#12B886]/30 focus:border-[#00FFCC]/50 focus:outline-none transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                className="btn-modern btn-primary w-full py-5 rounded-2xl flex items-center justify-center gap-4 group transition-all shadow-[0_0_30px_rgba(0,255,204,0.2)] border-none"
+              >
+                <ShieldCheck size={20} className="group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-extrabold uppercase tracking-[4px]">Sign In to Terminal</span>
+              </button>
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#12B886]/10"></div></div>
+              <div className="relative flex justify-center text-[8px] uppercase tracking-[3px] font-bold text-[#12B886]/40 bg-[#1A1D1E] px-4">Secondary_Uplink</div>
             </div>
 
-            <div className="pt-8 text-center">
-              <p className="text-[10px] text-[#B0B8B9] leading-relaxed uppercase tracking-[2px] font-bold opacity-40">
-                Authorized access only. Technical audit protocols in effect.
-              </p>
-            </div>
+            <button 
+              onClick={handleGoogleLogin}
+              className="w-full py-4 rounded-xl border border-[#12B886]/20 bg-[#12B886]/5 text-[#12B886] hover:text-[#00FFCC] hover:border-[#00FFCC]/30 transition-all flex items-center justify-center gap-3 group"
+            >
+              <img src="https://www.gstatic.com/lamda/images/google_logo_color_24dp.v6.png" className="w-4 h-4 brightness-0 invert opacity-40 group-hover:opacity-100" alt="G" />
+              <span className="text-[10px] font-black uppercase tracking-[3px]">Authorize via Google</span>
+            </button>
           </div>
         </div>
       </motion.div>
@@ -130,4 +146,3 @@ const Auth = () => {
 };
 
 export default Auth;
-

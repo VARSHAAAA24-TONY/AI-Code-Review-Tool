@@ -11,14 +11,14 @@ export const supabase = isMockMode ? {
     getSession: async () => {
       const isGuest = localStorage.getItem('sb-guest-session');
       return { 
-        data: { session: isGuest ? { user: { id: 'guest-node-01', email: 'guest@forensic.core' } } : null }, 
+        data: { session: isGuest ? { user: { id: 'rakesh-n-01', email: 'rakesh.n@forensic.core' } } : null }, 
         error: null 
       };
     },
     getUser: async () => {
       const isGuest = localStorage.getItem('sb-guest-session');
       return { 
-        data: { user: isGuest ? { id: 'guest-node-01', email: 'guest@forensic.core' } : null }, 
+        data: { user: isGuest ? { id: 'rakesh-n-01', email: 'rakesh.n@forensic.core' } : null }, 
         error: null 
       };
     },

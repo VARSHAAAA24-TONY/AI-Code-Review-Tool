@@ -15,12 +15,15 @@ import { supabase } from '../lib/supabase';
 const Auth = () => {
   const handleGoogleLogin = async () => {
     try {
-      // Forensic Bypass: No database keys required for this session
-      localStorage.setItem('sb-guest-session', 'true');
-      console.log('AUTHORIZATION_HANDSHAKE: SUCCESS');
-      window.location.reload();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
     } catch (error) {
-      console.error('Handshake failure:', error.message);
+      console.error('Error logging in with Google:', error.message);
     }
   };
 

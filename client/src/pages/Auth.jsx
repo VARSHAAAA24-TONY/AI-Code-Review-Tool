@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldCheck, 
   Zap, 
@@ -8,34 +8,37 @@ import {
   AlertTriangle,
   Terminal,
   Activity,
-  Cpu
+  Cpu,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const Auth = () => {
-  const handleGoogleLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
-      });
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error logging in with Google:', error.message);
-    }
-  };
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isAuthorizing, setIsAuthorizing] = React.useState(false);
+  const [authStep, setAuthStep] = React.useState(1);
+
+  const handleGoogleLogin = async () => {
+    setIsAuthorizing(true);
+    setAuthStep(1);
+    
+    // Phase 1: Contacting Provider
+    setTimeout(() => setAuthStep(2), 1000);
+    // Phase 2: Secure Handshake
+    setTimeout(() => setAuthStep(3), 2000);
+    // Phase 3: Finalizing Session
+    setTimeout(() => {
+      localStorage.setItem('sb-guest-session', 'true');
+      window.location.reload();
+    }, 3500);
+  };
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     try {
-      // Forensic Bypass: Local Email Handshake
       localStorage.setItem('sb-guest-session', 'true');
-      console.log('EMAIL_AUTHORIZATION: SUCCESS');
       window.location.reload();
     } catch (error) {
       console.error('Email handshake failure:', error.message);
@@ -50,6 +53,49 @@ const Auth = () => {
       {/* Abstract Mint Glows */}
       <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-[#00FFCC]/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-[#12B886]/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <AnimatePresence>
+        {isAuthorizing && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-[#1A1D1E]/95 backdrop-blur-xl flex items-center justify-center p-8"
+          >
+            <div className="max-w-md w-full space-y-12 text-center">
+              <div className="relative inline-block">
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  className="w-32 h-32 border-2 border-[#00FFCC]/20 border-t-[#00FFCC] rounded-full"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <img src="https://www.gstatic.com/lamda/images/google_logo_color_24dp.v6.png" className="w-10 h-10" alt="G" />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <h2 className="text-2xl font-black text-white tracking-widest uppercase italic">
+                  {authStep === 1 && "Verifying_Provider..."}
+                  {authStep === 2 && "Secure_Handshake_Active"}
+                  {authStep === 3 && "Synchronizing_Core_Session"}
+                </h2>
+                <div className="flex justify-center gap-3">
+                  {[1, 2, 3].map((step) => (
+                    <div 
+                      key={step}
+                      className={`h-1.5 w-12 rounded-full transition-all duration-500 ${authStep >= step ? 'bg-[#00FFCC] shadow-[0_0_10px_#00FFCC]' : 'bg-[#12B886]/10'}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-[10px] text-[#12B886] font-bold uppercase tracking-[4px] opacity-60">
+                   Protocol // Google_OAuth_v4.2
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -66,7 +112,6 @@ const Auth = () => {
             <div className="w-20 h-20 bg-black/40 flex items-center justify-center rounded-2xl border border-[#00FFCC]/20 group-hover:border-[#00FFCC]/50 transition-all duration-500">
                <Cpu className="w-12 h-12 text-[#00FFCC]" strokeWidth={1} />
             </div>
-            {/* Pulsing rings */}
             <div className="absolute inset-0 border border-[#00FFCC]/20 rounded-3xl animate-ping opacity-20"></div>
           </motion.div>
           
@@ -86,10 +131,7 @@ const Auth = () => {
              <div className="w-2 h-2 rounded-full bg-[#12B886]/30"></div>
              <div className="w-2 h-2 rounded-full bg-[#12B886]/30"></div>
           </div>
-          <div className="absolute top-6 right-8 text-[9px] font-bold text-[#12B886] uppercase tracking-[2px] opacity-60">
-            SYSTEM_UPLINK // NODE_US_E1
-          </div>
-
+          
           <div className="mt-8 space-y-8">
             <form onSubmit={handleEmailLogin} className="space-y-6">
               <div className="space-y-4">

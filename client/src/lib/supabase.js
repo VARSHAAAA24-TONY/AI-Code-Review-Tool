@@ -12,9 +12,11 @@ export const supabase = isMockMode ? {
     getUser: async () => ({ data: { user: { id: 'guest-node-01', email: 'guest@forensic.core' } }, error: null }),
     onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
     signInWithOAuth: async () => ({ error: null }),
-    signOut: async () => ({ 
-      error: null 
-    }),
+    signOut: async () => { 
+      localStorage.removeItem('sb-guest-session');
+      window.location.reload();
+      return { error: null };
+    },
   },
   from: () => ({
     select: () => ({

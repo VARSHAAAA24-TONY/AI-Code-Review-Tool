@@ -85,11 +85,22 @@ const Auth = () => {
               </div>
               
               <button 
-                onClick={handleGoogleLogin}
-                className="btn-modern btn-primary w-full py-5 rounded-2xl flex items-center justify-center gap-4 group transition-all"
+                onClick={() => {
+                  localStorage.setItem('sb-guest-session', 'true');
+                  window.location.reload();
+                }}
+                className="btn-modern btn-primary w-full py-5 rounded-2xl flex items-center justify-center gap-4 group transition-all shadow-[0_0_30px_rgba(0,255,204,0.3)] border-none"
               >
-                <img src="https://www.gstatic.com/lamda/images/google_logo_color_24dp.v6.png" className="w-5 h-5 brightness-0 invert" alt="G" />
-                <span className="text-sm font-bold tracking-widest">Sign in with Authorization</span>
+                <Radiation size={20} className="group-hover:rotate-180 transition-transform duration-1000" />
+                <span className="text-sm font-extrabold uppercase tracking-[4px]">Initiate_Guest_Bypass</span>
+              </button>
+
+              <button 
+                onClick={handleGoogleLogin}
+                className="w-full py-4 rounded-xl border border-[#12B886]/20 bg-[#12B886]/5 text-[#12B886] hover:text-[#00FFCC] hover:border-[#00FFCC]/30 transition-all flex items-center justify-center gap-3 group opacity-40 hover:opacity-100"
+              >
+                <img src="https://www.gstatic.com/lamda/images/google_logo_color_24dp.v6.png" className="w-4 h-4 brightness-0 invert opacity-40 group-hover:opacity-100" alt="G" />
+                <span className="text-[10px] font-black uppercase tracking-[3px]">Sign in with Authorization (DB Required)</span>
               </button>
             </div>
 

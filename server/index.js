@@ -24,20 +24,40 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
+// Health Check Route
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ONLINE', 
+    timestamp: new Date().toISOString(),
+    version: '2.0.0-FORENSIC'
+  });
+});
+
 // Main Analysis Route
 app.post('/api/analyze', async (req, res) => {
   const { code, language } = req.body;
 
-  if (!code) {
-    return res.status(400).json({ error: 'BUFFER_EMPTY: NO_SOURCE_DETECTED' });
+  if (!code || code.trim().length === 0) {
+    return res.status(400).json({ 
+      error: 'BUFFER_EMPTY', 
+      message: 'NO_SOURCE_DETECTED: A waiting code buffer is required for forensic audit.' 
+    });
+  }
+
+  if (!language) {
+    return res.status(400).json({ 
+      error: 'ARCH_UNDEFINED', 
+      message: 'LANGUAGE_NOT_SPECIFIED: Core must know the logic architecture to proceed.' 
+    });
   }
 
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] AUDIT_REQUEST_RECEIVED: SIZE=${code.length}B`);
+  console.log(`[${timestamp}] AUDIT_REQUEST_RECEIVED: LANG=${language}, SIZE=${code.length}B`);
 
   try {
-    const analysis = await analyzeCodeWithAI(code);
+    const analysis = await analyzeCodeWithAI(code, language);
     analysis.code = code; // Attach the original code back to the result
+    analysis.language = language;
     
     console.log(`[${timestamp}] AUDIT_COMPLETE: SCORE=${analysis.score}`);
     res.json(analysis);

@@ -19,18 +19,40 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const guestSession = localStorage.getItem('sb-guest-session');
+    
+    if (guestSession) {
+      setSession({ user: { id: 'guest-node-01', email: 'guest@forensic.core' } });
+      setLoading(false);
+      return;
+    }
+
+    // Forensic Timeout: Don't let a dead DB hang the UI
+    const loadingTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      clearTimeout(loadingTimeout);
+      setLoading(false);
+    }).catch(() => {
+      clearTimeout(loadingTimeout);
       setLoading(false);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (!localStorage.getItem('sb-guest-session')) {
+        setSession(session);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(loadingTimeout);
+    };
   }, []);
 
   if (error) {

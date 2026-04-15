@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import serverless from 'serverless-http';
 import { analyzeCodeWithAI } from './aiService.js';
 
 dotenv.config();
@@ -78,16 +79,21 @@ app.get('/api/admin/stats', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.clear();
-  console.log('\x1b[31m%s\x1b[0m', '--------------------------------------------------');
-  console.log('\x1b[31m%s\x1b[0m', '   MIDNIGHT_OIL_CORE - ARCHITECTURAL_AUDIT_V2     ');
-  console.log('\x1b[31m%s\x1b[0m', '--------------------------------------------------');
-  console.log(`SERVER_STATUS: ONLINE`);
-  console.log(`UPLINK_PORT: ${PORT}`);
-  console.log(`AI_CORE: GROQ_LLAMA_3_70B`);
-  console.log('--------------------------------------------------');
-});
+// For local development
+if (process.env.NODE_ENV !== 'production' && !process.env.NETLIFY) {
+  app.listen(PORT, () => {
+    console.clear();
+    console.log('\x1b[31m%s\x1b[0m', '--------------------------------------------------');
+    console.log('\x1b[31m%s\x1b[0m', '   MIDNIGHT_OIL_CORE - ARCHITECTURAL_AUDIT_V2     ');
+    console.log('\x1b[31m%s\x1b[0m', '--------------------------------------------------');
+    console.log(`SERVER_STATUS: ONLINE`);
+    console.log(`UPLINK_PORT: ${PORT}`);
+    console.log(`AI_CORE: GROQ_LLAMA_3_70B`);
+    console.log('--------------------------------------------------');
+  });
+}
 
+export const handler = serverless(app);
 export default app;
+
 

@@ -18,6 +18,7 @@
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "nodemon": "^3.1.14",
-    "openai": "^6.33.0"
+    "openai": "^6.33.0",
+    "serverless-http": "^4.0.0"
   }
 }

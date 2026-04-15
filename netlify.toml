@@ -4,9 +4,7 @@
 
 [functions]
   node_bundler = "esbuild"
-
-[[plugins]]
-  package = "@netlify/plugin-functions-install-core"
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"

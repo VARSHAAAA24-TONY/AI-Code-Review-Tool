@@ -10,6 +10,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Safety Check: API Key Validation
+if (!process.env.GROQ_API_KEY) {
+  console.error('[CRITICAL] Missing GROQ_API_KEY in environment variables.');
+}
+
 // Global Reliability Handlers
 process.on('uncaughtException', (err) => {
   console.error('\x1b[31m%s\x1b[0m', '!!! CRITICAL UNCAUGHT EXCEPTION !!!');
